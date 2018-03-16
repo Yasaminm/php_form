@@ -1,11 +1,39 @@
 <!DOCTYPE html>
+  <form>
+                <fieldset>
+                    <legend>Früstück V 2</legend>
+                    <?php for ($i = 1; $i < count($breakfast); $i++): ?>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="selection" value="<?php echo $i ?>" id="selection<?php echo $i ?>">
+                <label class="form-check-label" for="selection<?php echo $i ?>"><?php echo $breakfast[$i] ?></label>
+                </div>
+                    <?php endfor; 
+//                    
+                    ?>
+                    
+                   
+                </fieldset>
+                
+                <hr>
+                
+                <fieldset>
+                    <button class="btn btn-primary">Send</button>
+                </fieldset>
+                
+            </form>
 <!--
 To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
 <?php 
+
+function _selected($a,$b){
+    return ($a === $b)? 'selected': ' ';
+    
+}
 //$_post['lastname'];
+$firstname = filter_input(INPUT_POST, 'firstName', FILTER_SANITIZE_STRING);
 $lastname = filter_input(INPUT_POST, 'lastname', FILTER_SANITIZE_STRING);
 $airportStart = filter_input(INPUT_POST, 'airportStart', FILTER_SANITIZE_STRING);
 //$age = filter_input(INPUT_POST, 'age', FILTER_VALIDATE_INT);
@@ -30,9 +58,7 @@ $airports = [];
         <script src="assets/js/jquery-3.3.1.min.js" type="text/javascript"></script>
         <script src="assets/js/bootstrap.min.js" type="text/javascript"></script>
         <script src="assets/js/main.js" type="text/javascript"></script>
-        <script type="text/javascript">
-//  document.getElementById('airportStart').value = "<?php echo $_GET['airportStart'];?>";
-</script>
+        
     </head>
     <body>
         <div class="container" >
@@ -61,14 +87,32 @@ $airports = [];
                     
        </fieldset>
                 <fieldset>
-                    <legend>Flughafen Daten</legend>
+                    <legend>Flughafen Daten Variante 1</legend>
                     <select class="form-control" name="airportStart">
                         <option>Bitte Flughafen auswählen...</option>
                        <?php for ($i = 0; $i < count($airports); $i++): ?>
                          <?php foreach($airports[$i] as $code => $name) : ?>
-                        <option value="" <?php if($_POST['airportStart'] == '') echo 'selected="selected"'; ?>><?php echo $code ?><?php echo $name ?></option>
+                        <?php if($airportStart === $code):?>
+                        <option selected  value="<?php echo $code ?>"><?php echo $name ?></option>
+                               <?php else: ?>
+                        <option value="<?php echo $code ?>"><?php echo $name ?></option>
+                        <?php endif; ?>
+                        
                         
                          <?php endforeach; ?>
+                        <?php endfor; ?>
+                        
+                    </select>
+                    
+                </fieldset>
+                <fieldset>
+                    <legend>Flughafen Daten Variante 2</legend>
+                    <select class="form-control" name="airportStart">
+                        <option>Bitte Flughafen auswählen...</option>
+                       <?php for ($i = 0; $i < count($airports); $i++): ?>
+                         <?php foreach($airports[$i] as $code => $name) : ?>
+                        <option <?php echo _selected($airportStart, $code); ?> value="<?php echo $code ?>"><?php echo $name ?></option>
+                       <?php endforeach; ?>
                         <?php endfor; ?>
                         
                     </select>
@@ -77,7 +121,7 @@ $airports = [];
                 
             </form>
             <hr>
-            <table class="table-striped">
+            <table class="table table-striped table-bordered">
                 <thead>
                     <tr>
                         <th>Vor Name</th>
@@ -89,7 +133,7 @@ $airports = [];
                     <tr>
                         <td><?php echo isset($_POST['firstName']) ? $_POST['firstName'] : '' ?></td>
                         <td><?php echo isset($_POST['lastName']) ? $_POST['lastName'] : '' ?></td>
-                        <td><?php if($_GET['airportStart'] == '') echo 'selected="selected"'; ?></td>
+                        <td><?php echo $airportStart; ?></td>
                     </tr>
                 </tbody>
             </table>
